@@ -1,0 +1,23 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "fake-useragent"
+version = "0.0.0"
+description = "Minimal project extracted from fake-useragent"
+readme = "README.md"
+requires-python = ">=3.9"
+dependencies = [
+  "importlib-resources>=5; python_version < '3.10'",
+]
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+"fake_useragent" = ["py.typed"]
+"fake_useragent.data" = ["browsers.json"]
