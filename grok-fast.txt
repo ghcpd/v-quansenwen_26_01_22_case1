@@ -1,0 +1,320 @@
+User: Role:
+You are a contributor asked to improve API documentation
+for an existing open-source project.
+
+IMPORTANT:
+The implementation is considered correct and authoritative.
+Your task is to improve DOCUMENTATION ONLY.
+
+--------------------------------------------------------------------------------
+YOUR TASK
+--------------------------------------------------------------------------------
+
+1. Review all public-facing APIs:
+- Functions
+- Classes
+- Methods
+- Public configuration interfaces
+
+2. Identify documentation gaps:
+- Missing docstrings or API entries
+- Undocumented parameters or return values
+- Missing constraints, error cases, or side effects
+- Incomplete or misleading descriptions
+
+3. Complete documentation so that:
+- Every public API is documented
+- Parameters, return values, and exceptions are clearly described
+- Behavior matches actual implementation exactly
+- No speculative intent is introduced
+- Use Google Style docstrings
+
+--------------------------------------------------------------------------------
+STRICT RULES
+--------------------------------------------------------------------------------
+
+- DO NOT change code behavior
+- DO NOT modify logic or signatures
+- DO NOT invent undocumented guarantees
+- If behavior is unclear, document it as “implementation-defined”
+- Do NOT remove existing APIs to simplify docs
+
+--------------------------------------------------------------------------------
+OUTPUT REQUIREMENTS
+--------------------------------------------------------------------------------
+
+You MUST provide:
+
+1. A list of all API documentation gaps you identified
+   - File
+   - Function / class / method
+   - Missing or unclear aspects
+
+2. Updated versions of:
+   - API documentation files
+   - Docstrings or reference docs you modified
+
+3. A short explanation describing:
+   - How you verified documentation against implementation
+   - Any ambiguities you intentionally left explicit
+
+--------------------------------------------------------------------------------
+EVALUATION CRITERIA (IMPLICIT)
+--------------------------------------------------------------------------------
+
+You will be evaluated on:
+- Coverage of missing API documentation
+- Accuracy and completeness of descriptions
+- Fidelity to implementation
+- Avoidance of speculative behavior
+- Professional API clarity
+- Pass the test case
+
+IMPORTANT:
+Treat this as a disciplined documentation contribution,
+not a redesign or refactor.
+
+GitHub Copilot: Read [](file:///c%3A/Users/v-quansenwen/work/real/fake-useragent-test/355/grok-fast/src/fake_useragent/__init__.py)
+
+Read [](file:///c%3A/Users/v-quansenwen/work/real/fake-useragent-test/355/grok-fast/src/fake_useragent/fake.py#1-1), lines 1 to 100
+
+Read [](file:///c%3A/Users/v-quansenwen/work/real/fake-useragent-test/355/grok-fast/src/fake_useragent/fake.py#101-101), lines 101 to 200
+
+Read [](file:///c%3A/Users/v-quansenwen/work/real/fake-useragent-test/355/grok-fast/src/fake_useragent/fake.py#201-201), lines 201 to 277
+
+Read [](file:///c%3A/Users/v-quansenwen/work/real/fake-useragent-test/355/grok-fast/src/fake_useragent/errors.py)
+
+Read [](file:///c%3A/Users/v-quansenwen/work/real/fake-useragent-test/355/grok-fast/src/fake_useragent/settings.py)
+
+Read [](file:///c%3A/Users/v-quansenwen/work/real/fake-useragent-test/355/grok-fast/src/fake_useragent/utils.py)
+
+Read [](file:///c%3A/Users/v-quansenwen/work/real/fake-useragent-test/355/grok-fast/src/fake_useragent/log.py)
+
+Read [](file:///c%3A/Users/v-quansenwen/work/real/fake-useragent-test/355/grok-fast/src/fake_useragent/data/__init__.py)
+
+Read [](file:///c%3A/Users/v-quansenwen/work/real/fake-useragent-test/355/grok-fast/tests/test_api_docs.py#1-1), lines 1 to 50
+
+Read [](file:///c%3A/Users/v-quansenwen/work/real/fake-useragent-test/355/grok-fast/tests/test_api_docs.py#51-51), lines 51 to 60
+
+Ran terminal command:  python -m pytest tests/test_api_docs.py -v
+
+Searched for text `"""` (`**/*.py`), 20 results
+
+Searched for text `^class` (`**/src/fake_useragent/*.py`), 3 results
+
+Using "Replace String in File"
+
+
+```
+
+```
+
+
+Using "Replace String in File"
+
+
+```
+
+```
+
+
+Using "Replace String in File"
+
+
+```
+
+```
+
+
+Using "Replace String in File"
+
+
+```
+
+```
+
+
+Using "Replace String in File"
+
+
+```
+
+```
+
+
+Using "Replace String in File"
+
+
+```
+
+```
+
+
+Using "Replace String in File"
+
+
+```
+
+```
+
+
+Using "Replace String in File"
+
+
+```
+
+```
+
+
+Using "Replace String in File"
+
+
+```
+
+```
+
+
+Using "Replace String in File"
+
+
+```
+
+```
+
+
+Using "Replace String in File"
+
+
+```
+
+```
+
+
+Using "Replace String in File"
+
+
+```
+
+```
+
+
+Using "Replace String in File"
+
+
+```
+
+```
+
+
+Ran terminal command:  python -m pytest tests/test_api_docs.py -v
+
+Ran terminal command:  python -m pytest
+
+Read [](file:///c%3A/Users/v-quansenwen/work/real/fake-useragent-test/355/grok-fast/tests)
+
+## API Documentation Gaps Identified
+
+1. **Module docstrings missing**:
+   - __init__.py
+   - errors.py
+   - fake.py
+   - log.py
+   - settings.py
+   - utils.py
+
+2. **Class docstrings missing**:
+   - `FakeUserAgent` in fake.py
+   - `BrowserUserAgentData` in utils.py (added class docstring, field docs were already present)
+   - `FakeUserAgentError` in errors.py
+
+3. **Function docstrings missing**:
+   - `load()` in utils.py
+
+4. **Method docstrings missing**:
+   - `FakeUserAgent.__init__()` in fake.py
+   - `FakeUserAgent._filter_useragents()` in fake.py
+   - `FakeUserAgent.getBrowser()` in fake.py
+   - `FakeUserAgent.__getitem__()` in fake.py
+   - `FakeUserAgent.__getattr__()` in fake.py
+   - All properties: `chrome`, `googlechrome`, `edge`, `firefox`, `ff`, `safari`, `random`, `getFirefox`, `getChrome`, `getEdge`, `getSafari`, `getRandom` in fake.py
+
+## Updated API Documentation
+
+### __init__.py
+```python
+"""A library to generate fake user agent strings."""
+
+from fake_useragent.errors import FakeUserAgentError, UserAgentError
+from fake_useragent.fake import FakeUserAgent, UserAgent
+from fake_useragent.settings import __version__ as VERSION
+```
+
+### errors.py
+```python
+"""Custom exceptions for the fake-useragent library."""
+
+class FakeUserAgentError(Exception):
+    """Base exception for fake-useragent errors."""
+    pass
+
+
+# common alias
+UserAgentError = FakeUserAgentError
+```
+
+### fake.py
+- Added module docstring: `"""Core implementation of fake user agent generation."""`
+- Added class docstring for `FakeUserAgent`
+- Added docstrings for `__init__`, `_filter_useragents`, `getBrowser`, `__getitem__`, `__getattr__`, and all properties
+
+### log.py
+```python
+"""Logging configuration for the fake-useragent library."""
+
+import logging
+
+logger = logging.getLogger(__package__)
+```
+
+### settings.py
+```python
+"""Configuration settings for the fake-useragent library."""
+
+from importlib import metadata
+
+__version__ = metadata.version("fake-useragent")
+
+REPLACEMENTS = {
+    " ": "",
+    "_": "",
+}
+
+OS_REPLACEMENTS = {
+    "windows": ["win10", "win7"],
+}
+
+SHORTCUTS = {
+    "microsoft edge": "edge",
+    "google": "chrome",
+    "googlechrome": "chrome",
+    "ff": "firefox",
+}
+```
+
+### utils.py
+- Added module docstring: `"""Utility functions and data structures for the fake-useragent library."""`
+- Added class docstring for `BrowserUserAgentData`
+- Added docstring for `load()` function
+
+## Verification and Explanation
+
+I verified the documentation against the implementation by:
+- Reading the source code to understand parameter usage, return types, and behavior
+- Running the existing test suite (test_api_docs.py) which checks for docstring presence on all public APIs
+- Running all tests to ensure no functionality was broken
+
+The documentation accurately reflects the implementation without introducing speculative behavior. All parameters, return values, and exceptions are described based on the actual code logic. No ambiguities were left explicit as the behavior is deterministic and well-defined in the code. The test now passes, confirming complete coverage of the required docstrings.
+
+Made changes.
+
+Similar code found with 1 license type
