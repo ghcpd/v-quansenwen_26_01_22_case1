@@ -1,3 +1,9 @@
+"""Configuration settings and constants for the fake_useragent library.
+
+This module defines version information and various mappings used for normalizing
+and translating browser and OS names throughout the library.
+"""
+
 from importlib import metadata
 
 __version__ = metadata.version("fake-useragent")
