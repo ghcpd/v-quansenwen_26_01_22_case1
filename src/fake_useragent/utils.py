@@ -1,3 +1,9 @@
+"""Utility functions and data structures for the fake_useragent library.
+
+This module provides the BrowserUserAgentData type definition and the load()
+function for reading user agent data from the bundled JSON data file.
+"""
+
 import json
 import sys
 from typing import TypedDict, Union
@@ -13,6 +19,13 @@ from fake_useragent.log import logger
 
 
 class BrowserUserAgentData(TypedDict):
+    """TypedDict representing browser user agent data and metadata.
+
+    This dictionary structure contains all information about a user agent string,
+    including the string itself and associated metadata such as browser type,
+    version, operating system, and device type.
+    """
+
     useragent: str
     """The user agent string."""
     percent: float
@@ -29,9 +42,30 @@ class BrowserUserAgentData(TypedDict):
     """OS name for the user agent."""
 
 
-# Load all lines from browser.json file
-# Returns array of objects
 def load() -> list[BrowserUserAgentData]:
+    """Load user agent data from the bundled browsers.json file.
+
+    This function attempts to load user agent data using importlib.resources
+    (or importlib_resources for Python < 3.10). If that fails, it falls back
+    to pkg_resources. The data file contains one JSON object per line.
+
+    Returns:
+        list[BrowserUserAgentData]: List of user agent data dictionaries.
+            Each dictionary contains user agent information including the
+            user agent string and associated metadata.
+
+    Raises:
+        FakeUserAgentError: If the data file cannot be loaded or parsed,
+            or if the loaded data is empty or not a list.
+
+    Examples:
+        Load user agent data::
+
+            from fake_useragent.utils import load
+            data = load()
+            print(len(data))  # Number of available user agents
+            print(data[0]['useragent'])  # First user agent string
+    """
     data = []
     ret: Union[list[BrowserUserAgentData], None] = None
     try:
