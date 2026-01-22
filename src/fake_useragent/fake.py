@@ -1,3 +1,8 @@
+"""Utilities for selecting and returning user-agent strings.
+
+The core public class is :class:`FakeUserAgent` which loads local browser
+data and provides multiple convenience accessors.
+"""
 import random
 from collections.abc import Iterable
 from typing import Any, Optional, Union
@@ -65,6 +70,12 @@ def _ensure_float(value: Any) -> float:
 
 
 class FakeUserAgent:
+    """Utility for selecting user-agent strings from bundled data.
+
+    Instances load local browser user-agent data (via :func:`fake_useragent.utils.load`)
+    and provide methods and properties to access either raw user-agent strings or
+    richer BrowserUserAgentData objects filtered by the instance configuration.
+    """
     def __init__(  # noqa: PLR0913
         self,
         browsers: Optional[Iterable[str]] = None,
@@ -79,6 +90,33 @@ class FakeUserAgent:
         ),
         safe_attrs: Optional[Iterable[str]] = None,
     ):
+        """Create a new :class:`FakeUserAgent` instance.
+
+        Args:
+            browsers: Iterable of browser names to include. Defaults to
+                ``["chrome", "firefox", "safari", "edge"]`` when ``None``.
+            os: Iterable of OS names; values may be mapped using
+                ``settings.OS_REPLACEMENTS``.
+            min_version: Minimum browser version (inclusive). Converted to
+                float using ``_ensure_float``; a ``ValueError`` is raised if
+                conversion fails.
+            min_percentage: Minimum percentage threshold (inclusive). Converted
+                to float; ``ValueError`` is raised on invalid values.
+            platforms: Iterable of device types (e.g. ``"pc"``, ``"mobile"``,
+                ``"tablet"``).
+            fallback: User-agent string to return when selection fails; must
+                be a ``str`` or a ``TypeError`` is raised.
+            safe_attrs: Iterable of attribute names that should be delegated to
+                normal attribute lookup instead of being interpreted as
+                browser accessors; must be an iterable of ``str``.
+
+        Raises:
+            TypeError: If ``fallback`` is not a str or ``safe_attrs`` contains
+                non-string elements.
+            ValueError: If ``min_version`` or ``min_percentage`` cannot be
+                converted to float.
+            FakeUserAgentError: If loading local browser data fails.
+        """
         self.browsers = _ensure_iterable(
             browsers=browsers, default=["chrome", "firefox", "safari", "edge"]
         )
@@ -120,6 +158,13 @@ class FakeUserAgent:
     def _filter_useragents(
         self, request: Union[str, None] = None
     ) -> list[BrowserUserAgentData]:
+        """Return entries matching the instance filters.
+
+        Filters applied: browser name, OS (including replacements), device
+        type (``type``), minimum browser ``version`` (>= ``min_version``),
+        and minimum ``percent`` (>= ``min_percentage``). If ``request`` is
+        provided, it further restricts results to the named browser.
+        """
         # filter based on browser, os, platform and version.
         filtered_useragents = list(
             filter(
@@ -142,6 +187,14 @@ class FakeUserAgent:
     # This method will return an object
     # Usage: ua.getBrowser('firefox')
     def getBrowser(self, request: str) -> BrowserUserAgentData:
+        """Return a :class:`BrowserUserAgentData` object for ``request``.
+
+        ``request`` is normalized using ``settings.REPLACEMENTS`` and
+        ``settings.SHORTCUTS``. If ``request == 'random'`` a random matching
+        entry is returned. ``KeyError`` and ``IndexError`` from selection
+        are caught and suppressed: a fallback mapping is returned and a
+        warning is logged.
+        """
         try:
             # Handle request value
             for value, replacement in settings.REPLACEMENTS.items():
@@ -184,11 +237,25 @@ class FakeUserAgent:
     # This method will use the method below, returning a string
     # Usage: ua['random']
     def __getitem__(self, attr: str) -> Union[str, Any]:
-        return self.__getattr__(attr)
+        """Bracket access for convenience, equivalent to attribute access.
+
+        Example: ``ua['random']`` is equivalent to ``ua.random`` and returns
+        a user-agent string.
+        """
+        return self.__getattr__(attr) 
 
     # This method will returns a string
     # Usage: ua.random
     def __getattr__(self, attr: str) -> Union[str, Any]:
+        """Return a user-agent string for attribute-style access.
+
+        If ``attr`` is a member of ``self.safe_attrs`` attribute lookup is
+        delegated to the superclass. Otherwise the name is normalized via
+        ``settings.REPLACEMENTS`` and ``settings.SHORTCUTS`` and matching
+        entries are selected; a random entry's ``useragent`` string is
+        returned. Errors during selection are caught and a fallback string
+        is returned while a warning is logged.
+        """
         if attr in self.safe_attrs:
             return super(UserAgent, self).__getattribute__(attr)
 
@@ -224,51 +291,63 @@ class FakeUserAgent:
 
     @property
     def chrome(self) -> str:
+        """Convenience property returning a Chrome user-agent string."""
         return self.__getattr__("chrome")
 
     @property
     def googlechrome(self) -> str:
+        """Alias for :attr:`chrome`."""
         return self.chrome
 
     @property
     def edge(self) -> str:
+        """Convenience property returning an Edge user-agent string."""
         return self.__getattr__("edge")
 
     @property
     def firefox(self) -> str:
+        """Convenience property returning a Firefox user-agent string."""
         return self.__getattr__("firefox")
 
     @property
     def ff(self) -> str:
+        """Alias for :attr:`firefox`."""
         return self.firefox
 
     @property
     def safari(self) -> str:
+        """Convenience property returning a Safari user-agent string."""
         return self.__getattr__("safari")
 
     @property
     def random(self) -> str:
+        """Return a random user-agent string matching the instance filters."""
         return self.__getattr__("random")
 
     # The following 'get' methods return an object rather than only the UA string
     @property
     def getFirefox(self) -> BrowserUserAgentData:
+        """Return a :class:`BrowserUserAgentData` object for Firefox."""
         return self.getBrowser("firefox")
 
     @property
     def getChrome(self) -> BrowserUserAgentData:
+        """Return a :class:`BrowserUserAgentData` object for Chrome."""
         return self.getBrowser("chrome")
 
     @property
     def getEdge(self) -> BrowserUserAgentData:
+        """Return a :class:`BrowserUserAgentData` object for Edge."""
         return self.getBrowser("edge")
 
     @property
     def getSafari(self) -> BrowserUserAgentData:
+        """Return a :class:`BrowserUserAgentData` object for Safari."""
         return self.getBrowser("safari")
 
     @property
     def getRandom(self) -> BrowserUserAgentData:
+        """Return a :class:`BrowserUserAgentData` object selected at random."""
         return self.getBrowser("random")
 
 

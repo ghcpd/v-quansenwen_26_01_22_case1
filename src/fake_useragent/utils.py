@@ -1,3 +1,9 @@
+"""Utilities for reading packaged user-agent data.
+
+The :func:`load` function reads the bundled ``browsers.json`` resource and
+returns a list of :class:`BrowserUserAgentData` dictionaries.
+"""
+
 import json
 import sys
 from typing import TypedDict, Union
@@ -13,6 +19,12 @@ from fake_useragent.log import logger
 
 
 class BrowserUserAgentData(TypedDict):
+    """TypedDict describing a single browser user-agent entry.
+
+    Keys correspond to the fields stored in the local ``browsers.json``
+    data file and returned by :func:`load`.
+    """
+
     useragent: str
     """The user agent string."""
     percent: float
@@ -32,6 +44,21 @@ class BrowserUserAgentData(TypedDict):
 # Load all lines from browser.json file
 # Returns array of objects
 def load() -> list[BrowserUserAgentData]:
+    """Load packaged browser user-agent data and return a list of entries.
+
+    The implementation first tries :mod:`importlib.resources` to read
+    the bundled ``browsers.json`` resource and falls back to
+    :mod:`pkg_resources` when necessary. Each line of the file is expected
+    to be a JSON object parsed to a :class:`BrowserUserAgentData` dictionary.
+
+    Returns:
+        list[BrowserUserAgentData]: The parsed list of browser entries.
+
+    Raises:
+        FakeUserAgentError: If no data could be loaded, or the loaded data
+            is empty or not a list. The raised exception's args may include
+            the raw return value used for diagnostics.
+    """
     data = []
     ret: Union[list[BrowserUserAgentData], None] = None
     try:
