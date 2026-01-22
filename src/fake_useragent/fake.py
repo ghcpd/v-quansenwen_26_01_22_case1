@@ -1,3 +1,5 @@
+"""Core implementation of fake user agent generation."""
+
 import random
 from collections.abc import Iterable
 from typing import Any, Optional, Union
@@ -65,6 +67,12 @@ def _ensure_float(value: Any) -> float:
 
 
 class FakeUserAgent:
+    """A class for generating fake user agent strings based on browser data.
+
+    This class loads browser user agent data and provides methods to retrieve
+    random or specific user agent strings filtered by various criteria.
+    """
+
     def __init__(  # noqa: PLR0913
         self,
         browsers: Optional[Iterable[str]] = None,
@@ -79,6 +87,19 @@ class FakeUserAgent:
         ),
         safe_attrs: Optional[Iterable[str]] = None,
     ):
+        """Initialize the FakeUserAgent instance.
+
+        Args:
+            browsers: List of browser names to include. Defaults to ["chrome", "firefox", "safari", "edge"].
+            os: List of operating systems to include. Defaults to ["win10", "macos", "linux"].
+                "windows" is expanded to ["win10", "win7"].
+            min_version: Minimum browser version to include. Defaults to 0.0.
+            min_percentage: Minimum usage percentage to include. Defaults to 0.0.
+            platforms: List of platform types to include. Defaults to ["pc", "mobile", "tablet"].
+            fallback: Fallback user agent string to return when no match is found. Defaults to a Chrome UA.
+            safe_attrs: Set of attribute names that bypass user agent generation and return the attribute value directly.
+                Defaults to empty set.
+        """
         self.browsers = _ensure_iterable(
             browsers=browsers, default=["chrome", "firefox", "safari", "edge"]
         )
@@ -120,6 +141,14 @@ class FakeUserAgent:
     def _filter_useragents(
         self, request: Union[str, None] = None
     ) -> list[BrowserUserAgentData]:
+        """Filter user agents based on instance criteria and optional browser request.
+
+        Args:
+            request: Specific browser name to filter by, or None for all matching browsers.
+
+        Returns:
+            A list of BrowserUserAgentData dictionaries that match the filters.
+        """
         # filter based on browser, os, platform and version.
         filtered_useragents = list(
             filter(
@@ -142,6 +171,16 @@ class FakeUserAgent:
     # This method will return an object
     # Usage: ua.getBrowser('firefox')
     def getBrowser(self, request: str) -> BrowserUserAgentData:
+        """Get a random user agent data dictionary for the specified browser.
+
+        Args:
+            request: Browser name (e.g., 'chrome', 'firefox') or 'random' for any browser.
+                Shortcuts and replacements from settings are applied.
+
+        Returns:
+            A BrowserUserAgentData dictionary with user agent information.
+            If no matching user agents are found, returns a fallback dictionary.
+        """
         try:
             # Handle request value
             for value, replacement in settings.REPLACEMENTS.items():
@@ -184,11 +223,29 @@ class FakeUserAgent:
     # This method will use the method below, returning a string
     # Usage: ua['random']
     def __getitem__(self, attr: str) -> Union[str, Any]:
+        """Get a user agent string by attribute name, equivalent to __getattr__.
+
+        Args:
+            attr: Attribute name corresponding to a browser or 'random'.
+
+        Returns:
+            A user agent string, or the attribute value if in safe_attrs.
+        """
         return self.__getattr__(attr)
 
     # This method will returns a string
     # Usage: ua.random
     def __getattr__(self, attr: str) -> Union[str, Any]:
+        """Get a user agent string by attribute name.
+
+        Args:
+            attr: Attribute name corresponding to a browser (e.g., 'chrome', 'firefox') or 'random'.
+                Shortcuts and replacements from settings are applied.
+                If attr is in safe_attrs, returns the actual attribute value.
+
+        Returns:
+            A user agent string. If no matching user agents are found, returns the fallback string.
+        """
         if attr in self.safe_attrs:
             return super(UserAgent, self).__getattribute__(attr)
 
@@ -224,51 +281,63 @@ class FakeUserAgent:
 
     @property
     def chrome(self) -> str:
+        """Returns a random Chrome user agent string."""
         return self.__getattr__("chrome")
 
     @property
     def googlechrome(self) -> str:
+        """Returns a random Chrome user agent string (alias for chrome)."""
         return self.chrome
 
     @property
     def edge(self) -> str:
+        """Returns a random Edge user agent string."""
         return self.__getattr__("edge")
 
     @property
     def firefox(self) -> str:
+        """Returns a random Firefox user agent string."""
         return self.__getattr__("firefox")
 
     @property
     def ff(self) -> str:
+        """Returns a random Firefox user agent string (alias for firefox)."""
         return self.firefox
 
     @property
     def safari(self) -> str:
+        """Returns a random Safari user agent string."""
         return self.__getattr__("safari")
 
     @property
     def random(self) -> str:
+        """Returns a random user agent string from all available browsers."""
         return self.__getattr__("random")
 
     # The following 'get' methods return an object rather than only the UA string
     @property
     def getFirefox(self) -> BrowserUserAgentData:
+        """Returns a random Firefox user agent data dictionary."""
         return self.getBrowser("firefox")
 
     @property
     def getChrome(self) -> BrowserUserAgentData:
+        """Returns a random Chrome user agent data dictionary."""
         return self.getBrowser("chrome")
 
     @property
     def getEdge(self) -> BrowserUserAgentData:
+        """Returns a random Edge user agent data dictionary."""
         return self.getBrowser("edge")
 
     @property
     def getSafari(self) -> BrowserUserAgentData:
+        """Returns a random Safari user agent data dictionary."""
         return self.getBrowser("safari")
 
     @property
     def getRandom(self) -> BrowserUserAgentData:
+        """Returns a random user agent data dictionary from all available browsers."""
         return self.getBrowser("random")
 
 
