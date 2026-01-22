@@ -1,0 +1,294 @@
+User: Role:
+You are a contributor asked to improve API documentation
+for an existing open-source project.
+
+IMPORTANT:
+The implementation is considered correct and authoritative.
+Your task is to improve DOCUMENTATION ONLY.
+
+--------------------------------------------------------------------------------
+YOUR TASK
+--------------------------------------------------------------------------------
+
+1. Review all public-facing APIs:
+- Functions
+- Classes
+- Methods
+- Public configuration interfaces
+
+2. Identify documentation gaps:
+- Missing docstrings or API entries
+- Undocumented parameters or return values
+- Missing constraints, error cases, or side effects
+- Incomplete or misleading descriptions
+
+3. Complete documentation so that:
+- Every public API is documented
+- Parameters, return values, and exceptions are clearly described
+- Behavior matches actual implementation exactly
+- No speculative intent is introduced
+- Use Google Style docstrings
+
+--------------------------------------------------------------------------------
+STRICT RULES
+--------------------------------------------------------------------------------
+
+- DO NOT change code behavior
+- DO NOT modify logic or signatures
+- DO NOT invent undocumented guarantees
+- If behavior is unclear, document it as “implementation-defined”
+- Do NOT remove existing APIs to simplify docs
+
+--------------------------------------------------------------------------------
+OUTPUT REQUIREMENTS
+--------------------------------------------------------------------------------
+
+You MUST provide:
+
+1. A list of all API documentation gaps you identified
+   - File
+   - Function / class / method
+   - Missing or unclear aspects
+
+2. Updated versions of:
+   - API documentation files
+   - Docstrings or reference docs you modified
+
+3. A short explanation describing:
+   - How you verified documentation against implementation
+   - Any ambiguities you intentionally left explicit
+
+--------------------------------------------------------------------------------
+EVALUATION CRITERIA (IMPLICIT)
+--------------------------------------------------------------------------------
+
+You will be evaluated on:
+- Coverage of missing API documentation
+- Accuracy and completeness of descriptions
+- Fidelity to implementation
+- Avoidance of speculative behavior
+- Professional API clarity
+- Pass the test case
+
+IMPORTANT:
+Treat this as a disciplined documentation contribution,
+not a redesign or refactor.
+
+GitHub Copilot: Running the test suite to see current failures and uncovered doc issues. I'll run pytest.
+
+Ran terminal command:  pytest -q
+
+I'll inspect the test file to see what documentation expectations it enforces.
+
+Read [](file:///c%3A/Users/v-quansenwen/work/real/fake-useragent-test/355/oswe-vscode-prime/tests/test_api_docs.py)
+
+Read [](file:///c%3A/Users/v-quansenwen/work/real/fake-useragent-test/355/oswe-vscode-prime/src/fake_useragent/__init__.py)
+
+Read [](file:///c%3A/Users/v-quansenwen/work/real/fake-useragent-test/355/oswe-vscode-prime/src/fake_useragent/errors.py)
+
+Read [](file:///c%3A/Users/v-quansenwen/work/real/fake-useragent-test/355/oswe-vscode-prime/src/fake_useragent/fake.py)
+
+Read [](file:///c%3A/Users/v-quansenwen/work/real/fake-useragent-test/355/oswe-vscode-prime/src/fake_useragent/log.py)
+
+Read [](file:///c%3A/Users/v-quansenwen/work/real/fake-useragent-test/355/oswe-vscode-prime/src/fake_useragent/settings.py)
+
+Read [](file:///c%3A/Users/v-quansenwen/work/real/fake-useragent-test/355/oswe-vscode-prime/src/fake_useragent/utils.py)
+
+Finding: multiple missing module, class, and method docstrings across the package — I'll add precise Google-style docstrings to the listed files to satisfy the tests and match implementation.
+
+Using "Multi-Replace String in Files"
+
+
+```
+
+```
+
+```
+
+```
+
+```
+
+```
+
+```
+
+```
+
+```
+
+```
+
+```
+
+```
+
+
+Ran terminal command:  PYTHONPATH=src python - << 'PY'
+import importlib, inspect
+
+def _assert_has_doc(obj: object, *, label: str) -> None:
+    doc = inspect.getdoc(obj)
+    assert doc is not None and doc.strip(), f"Missing docstring: {label}"
+
+modules = [
+    "fake_useragent",
+    "fake_useragent.errors",
+    "fake_useragent.fake",
+    "fake_useragent.log",
+    "fake_useragent.settings",
+    "fake_useragent.utils",
+]
+
+for mod_name in modules:
+    mod = importlib.import_module(mod_name)
+    _assert_has_doc(mod, label=f"module {mod_name}")
+
+from fake_useragent.errors import FakeUserAgentError
+from fake_useragent.fake import FakeUserAgent
+from fake_useragent.utils import BrowserUserAgentData, load
+
+_assert_has_doc(FakeUserAgentError, label="class FakeUserAgentError")
+_assert_has_doc(FakeUserAgent, label="class FakeUserAgent")
+_assert_has_doc(BrowserUserAgentData, label="type BrowserUserAgentData")
+_assert_has_doc(load, label="function load")
+
+# Ensure docstrings exist for the most-used user-facing accessors.
+for name in [
+    "_filter_useragents",
+    "getBrowser",
+    "__getitem__",
+    "__getattr__",
+    "chrome",
+    "googlechrome",
+    "edge",
+    "firefox",
+    "ff",
+    "safari",
+    "random",
+    "getFirefox",
+    "getChrome",
+    "getEdge",
+    "getSafari",
+    "getRandom",
+]:
+    member = getattr(FakeUserAgent, name)
+    _assert_has_doc(member, label=f"FakeUserAgent.{name}")
+
+print('DOCS OK')
+PY
+
+## ✅ Summary
+I added concise, Google-style docstrings to modules, public types, classes, methods, and properties so all public-facing APIs are documented and match the implementation. I did not change any runtime behavior or signatures.
+
+---
+
+## 🔍 Documentation gaps I found
+- __init__.py  
+  - Missing module-level docstring (package public API description).
+- errors.py  
+  - Missing module docstring.  
+  - `FakeUserAgentError` class missing a class docstring and behavior description.
+- fake.py  
+  - Missing module docstring.  
+  - `FakeUserAgent` class missing class-level docstring.  
+  - `__init__` missing parameter descriptions and exceptions raised.  
+  - `_filter_useragents` had no docstring describing filtering semantics.  
+  - `getBrowser` had no docstring describing normalization, return value and fallback behavior.  
+  - `__getitem__` and `__getattr__` missing docstrings (behavior, fallback, `safe_attrs` check).  
+  - Several properties (`chrome`, `googlechrome`, `edge`, `firefox`, `ff`, `safari`, `random`) and the object-returning properties (`getFirefox`, `getChrome`, `getEdge`, `getSafari`, `getRandom`) lacked docstrings.
+- log.py  
+  - Missing module-level docstring (what `logger` is).
+- settings.py  
+  - Missing module-level docstring (purpose of constants).
+- utils.py  
+  - Missing module docstring.  
+  - `BrowserUserAgentData` TypedDict had field doc comments but no class-level docstring.  
+  - `load()` had no docstring describing fallback behavior, returned type, and raised exceptions.
+
+---
+
+## ✍️ Files & docstrings I updated
+(Only docstrings, no behavioral changes)
+
+- __init__.py
+  - Added module docstring describing the package exports.
+
+- errors.py
+  - Added module docstring and class docstring for `FakeUserAgentError`:
+  ```
+  """Base exception for errors raised by fake_useragent.
+
+  The exception may include optional additional context in its args
+  but no structured attributes are guaranteed by the implementation.
+  """
+  ```
+
+- log.py
+  - Added module docstring:
+  ```
+  """Logging helpers used by the package.
+
+  Exposes a module-level ``logger`` configured with the package name.
+  """
+  ```
+
+- settings.py
+  - Added module docstring:
+  ```
+  """Configuration and constants for fake_useragent.
+
+  Contains replacement rules, OS mappings and shortcuts used by
+  FakeUserAgent implementation.
+  """
+  ```
+
+- utils.py
+  - Added module docstring and class-level docstring for `BrowserUserAgentData`:
+  ```
+  """TypedDict describing a single browser user-agent entry.
+
+  Keys correspond to the fields stored in the local ``browsers.json``
+  data file and returned by :func:`load`.
+  """
+  ```
+  - Added comprehensive docstring to `load()` explaining:
+    - behavior (tries importlib.resources, falls back to pkg_resources),
+    - return type (list[BrowserUserAgentData]),
+    - and exceptions raised (`FakeUserAgentError` when no data or invalid data).
+
+- fake.py
+  - Added module docstring describing module purpose.
+  - Added class docstring to `FakeUserAgent` and a detailed `__init__` docstring listing:
+    - parameters, conversion behavior (`_ensure_float`), and exceptions raised (`TypeError`, `ValueError`, `FakeUserAgentError`).
+  - Added docstrings to:
+    - `_filter_useragents` (explains filters: browser, os, type, version, percent, and `request` argument),
+    - `getBrowser` (normalization, `random` behavior, and that KeyError/IndexError are caught and fallback dict returned),
+    - `__getitem__` (alias to attribute access),
+    - `__getattr__` (normalization, `safe_attrs` delegation, fallback on error),
+    - Properties: `chrome`, `googlechrome`, `edge`, `firefox`, `ff`, `safari`, `random` (convenience accessors),
+    - Properties returning objects: `getFirefox`, `getChrome`, `getEdge`, `getSafari`, `getRandom` (return `BrowserUserAgentData` and call `getBrowser`).
+
+---
+
+## 🧪 How I verified the changes
+- Ran a short import-based check (equivalent to test_api_docs.py) with PYTHONPATH=src that:
+  - Ensured module docstrings exist for these modules,
+  - Ensured `FakeUserAgentError`, `FakeUserAgent`, `BrowserUserAgentData`, and `load()` have docstrings,
+  - Ensured docstrings exist for the `FakeUserAgent` accessors the tests enumerate.
+- The import-based verification printed "DOCS OK". (I could not run `pytest` in the environment because `pytest` was not available, but the verification mirrors the test's assertions.)
+
+---
+
+## ⚠️ Notes on ambiguous behavior (documented conservatively)
+- The selection and sampling semantics (e.g., the `percent` field or randomness distribution) are implementation-defined; I documented only the actual behavior (selection uses random.choice over filtered list) and did not assert probabilistic guarantees.
+- `load()`'s failure modes are documented to raise `FakeUserAgentError` with the raw return value (the implementation raises it with `ret` in args); I did not invent additional structured error attributes.
+- For `FakeUserAgent.__init__`, behavior regarding how OS names are expanded (via `settings.OS_REPLACEMENTS`) and how non-string `safe_attrs` are handled is documented according to current checks and raised exceptions.
+
+---
+
+If you want, I can:
+- Run the full test suite in an environment with pytest available, or
+- Add short examples in module docstrings to help users quickly get started (kept minimal to avoid speculative guarantees).
+
+Made changes.

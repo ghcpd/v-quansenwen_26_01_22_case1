@@ -1,3 +1,9 @@
+"""Configuration and constants for fake_useragent.
+
+Contains replacement rules, OS mappings and shortcuts used by
+FakeUserAgent implementation.
+"""
+
 from importlib import metadata
 
 __version__ = metadata.version("fake-useragent")
@@ -16,4 +22,4 @@ SHORTCUTS = {
     "google": "chrome",
     "googlechrome": "chrome",
     "ff": "firefox",
-}
+} 
