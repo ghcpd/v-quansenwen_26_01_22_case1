@@ -1,3 +1,9 @@
+"""Utility functions and types for the fake_useragent module.
+
+This module provides data loading functions and type definitions for
+user agent data structures.
+"""
+
 import json
 import sys
 from typing import TypedDict, Union
@@ -13,6 +19,18 @@ from fake_useragent.log import logger
 
 
 class BrowserUserAgentData(TypedDict):
+    """A dictionary containing user agent information for a specific browser configuration.
+    
+    Attributes:
+        useragent (str): The user agent string.
+        percent (float): Sampling probability for this user agent when random sampling. 
+            Currently has no effect.
+        type (str): The device type for this user agent (e.g., 'pc', 'mobile', 'tablet').
+        system (str): System name for the user agent (e.g., 'Chrome 122.0 Win10').
+        browser (str): Browser name for the user agent (e.g., 'chrome', 'firefox', 'safari', 'edge').
+        version (float): Version number of the browser.
+        os (str): Operating system name for the user agent (e.g., 'win10', 'macos', 'linux').
+    """
     useragent: str
     """The user agent string."""
     percent: float
@@ -32,6 +50,19 @@ class BrowserUserAgentData(TypedDict):
 # Load all lines from browser.json file
 # Returns array of objects
 def load() -> list[BrowserUserAgentData]:
+    """Load user agent data from the local browsers.json data file.
+    
+    This function loads browser user agent data from a bundled JSON file,
+    falling back to pkg_resources if importlib.resources is unavailable.
+    
+    Returns:
+        list[BrowserUserAgentData]: A list of user agent data dictionaries,
+            each containing information about a specific browser configuration.
+    
+    Raises:
+        FakeUserAgentError: If the data file cannot be found, parsed, or is invalid
+            (empty list or not a list type).
+    """
     data = []
     ret: Union[list[BrowserUserAgentData], None] = None
     try:
@@ -72,3 +103,4 @@ def load() -> list[BrowserUserAgentData]:
     if not isinstance(ret, list):
         raise FakeUserAgentError("Data is not a list ", ret)
     return ret
+

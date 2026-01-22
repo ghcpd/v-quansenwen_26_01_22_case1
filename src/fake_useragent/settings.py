@@ -1,3 +1,9 @@
+"""Configuration settings and constants for the fake_useragent module.
+
+This module defines default settings, string replacements, OS mappings,
+and browser shortcuts used throughout the library.
+"""
+
 from importlib import metadata
 
 __version__ = metadata.version("fake-useragent")
@@ -17,3 +23,4 @@ SHORTCUTS = {
     "googlechrome": "chrome",
     "ff": "firefox",
 }
+
